@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-$dep0 = "/data/home/jorge/ref/sars-cov-2.ref/NC_045512.bed";
+$dep0 = "NC_045512.bed";
 %ANN=();
 %GH =();
 
