@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 $len = $ARGV[0];
+$len += 2;
 
 $a = qx(more ~jorge/ref/sars-cov-2.ref/ASM985889v3.fa | grep -v "^>");
 $a =~ s/\n//eg;
