@@ -126,7 +126,7 @@ while(<A>){
    
             
     
-    ###Melting Inacio ----------------------------
+    ###Melting ----------------------------
     $TmI = qx( ./bin/OligoCalc.py $oNat_Sense ); chomp($TmI);
     $hI  = qx( ./bin/HairpinCalc.py        $oNat_Sense 5 4 ); chomp($hI);
     $sI  = qx( ./bin/SelfAnnealingSites.py $oNat_Sense 5 4 ); chomp($sI);
@@ -164,7 +164,6 @@ while(<A>){
     $aux2 = reverse($AntiSense);
     $aux2 = &RevComp($aux2); &delta_Composition21($aux2);
 
-    #exit;
     ###SSD software  --------------------------------------------
     $ssd = qx(./bin/deltacalculator.py $oNat_Sense); chomp($ssd);
 
@@ -181,12 +180,11 @@ while(<A>){
     $ssd = qx(./bin/deltacalculator.py $aux2); chomp($ssd);
     print "\tAntiSense:\t$ssd\t";
 
-    #exit;
     ###si_shRNA_selector software  --------------------------------------------
     print "si_shRNA_selector\t";
     &si_shRNA_selector($aux[1]);
 
-    ###Fim                         --------------------------------------------
+    ###End                         --------------------------------------------
     print "\n";
 }
 
@@ -228,10 +226,7 @@ sub si_shRNA_selector {
 
     my @aux = split(/\s+/, $ant);
     print "\tAntiSense:\t$eff_A\t$aux[3]\t$aux[4]\t";
-    
-    #print "$natural\n";
-    #print "$sin\n";
-    #print "$ant\n";
+
 }
 
 sub delta_Composition21 {
@@ -274,12 +269,12 @@ sub alin_seq2 {
     $genome ="Spain";            &covid_match2($_[0],$genome,$_[1],"Spain");
     $genome ="USA";              &covid_match2($_[0],$genome,$_[1],"USA");
 }
-#%GH =();
+
 sub G_hit {
     my @tmp = qx(ls STS/ | grep ".$set2.sts"); chomp(@tmp);
 
     for(my $i=0; $i <= $#tmp; $i++){
-	#print "$tmp[$i]\n";
+
 	my @a = split(/\./, $tmp[$i]);
 	open (K, "STS/$tmp[$i]");
 	while (<K>) {
@@ -294,23 +289,13 @@ sub G_hit {
 
 sub genomic_match2 {
     ($nm,) = split(/\t/, $GH{"$_[2] $_[1] $_[0]"} );
-    #$nm  = qx(grep -P "^$_[0]\\t"  ./STS/$_[2].$_[1].$o_len.sts 2> /dev/null | cut -f 2 );
-    #print "grep -P \"^$_[0]\\t\"  ./STS/$_[2].$_[1].$o_len.sts\n";
-    #chomp($nm);    
     if ($nm eq "" ) {$nm = "-1";}
-    #print "$_[3]= $nm\t";
     print "$nm\t";
 }
 
 sub covid_match2 {
-
-    #print "\n$GH{\"$_[2] $_[1] $_[0]\"}== GH{\"$_[2] $_[1] $_[0]\"}\n\n";
-    ($l,$nm) = split(/\t/, $GH{"$_[2] $_[1] $_[0]"} );
-    #$nm = qx(grep -P "^$_[0]\\t"  ./STS/$_[2].$_[1].$o_len.sts 2> /dev/null | cut -f 3 );
-    #print "grep -P \"^$_[0]\\t\"  ./STS/$_[2].$_[1].$o_len.sts\n";
-    #chomp($nm);    
+    ($l,$nm) = split(/\t/, $GH{"$_[2] $_[1] $_[0]"} );  
     if ($nm eq "" ) {$nm = "0";}
-    #print "$_[3]= $nm\t";
     print "$nm\t";
 }
 
@@ -333,10 +318,8 @@ sub olig_composition {
     print "$au\t";
 
     my $UUUU = scalar($_[0] =~ m/(UUUU)/g); if ( $UUUU > 0 ) {$UUUU = 1 } else {$UUUU = 0};
-    #my $TTTT = scalar($_[0] =~ m/(TTTT)/g); if ( $TTTT > 0 ) {$TTTT = 1 } else {$TTTT = 0};
     my $GCCA = scalar($_[0] =~ m/(GCCA)/g); if ( $GCCA > 0 ) {$GCCA = 1 } else {$GCCA = 0};
 
-    #print "TTTT= $TTTT\t";
     print "$UUUU\t";
     print "$GCCA\t";
 
@@ -354,7 +337,6 @@ sub penta {
     my $seq = $_[0];
     my $qtd = 0;
 
-    #print "$seq------\n";
     for($i=0;$i<= length($seq)-5 ;$i++){
 	my $sub_seq=substr($seq,$i,5);
 	my $A = $sub_seq =~ y/A/A/;
@@ -362,11 +344,9 @@ sub penta {
 
 	my $AU = ($A+$T)/5;
 	if ($AU >= 0.8 ){
-	    #print "$sub_seq\t$AU\n";
 	    $qtd++;
 	}
     }
-    #print "$qtd";
     return $qtd ;
 }
 
@@ -386,18 +366,15 @@ sub mAnnt {
 
 
 sub annot {
-    #print ">>>>> $dep0\n\n\n";
     open(B, $dep0);
     while (<B>){
 	chomp;
 	my @aux = split(/\t/,$_);
-	#print "($aux[1])($aux[2])($aux[3])\n";
 
 	for(my $i=$aux[1]; $i<= $aux[2]; $i++){
 	    if ($ANN{$i} !~ /$aux[3],/ ) {
 		$ANN{$i} .= "$aux[3],";
 	    }
-	    #print "$i = $ANN{$i}\n";
 	}      
     }
     close(B);
