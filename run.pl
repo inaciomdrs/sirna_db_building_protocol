@@ -7,13 +7,17 @@ if ($sLen ne "" ){
     qx(split -d -a 4  -l 748 input input. );
     @roda = qx(ls input.*); chomp(@roda);
 
+    qx( cat head.txt >  input.0000.res );
+    
     for ($i=0; $i <= $#roda; $i++){
-
-	qx(./db_olig_seq2.pl $roda[$i] $sLen > $roda[$i].res &);
-	
+	qx(./db_olig_seq2.pl $roda[$i] $sLen >> $roda[$i].res &);
     }
+    
 } else {
-    print "Faltou o Tamanho do sirna (entre 18 e 21)\n";
+    print "Missing the size of the sirna (between 18 and 21)\n";
 }
-#qx(cat *.res > db.txt );
+
+
+#Do this after finishing the background processes;
+#qx(cat head *.res > db.txt );
 #qx(rm input.*);
