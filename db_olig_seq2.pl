@@ -74,7 +74,7 @@ while(<A>){
     my $fCC = 0;  if($aux[1] =~ /CC$/){ $fCC = 1;}
     my $fGG = 0;  if($aux[1] =~ /GG$/){ $fGG = 1;}
     my $fAA = 0;  if($aux[1] =~ /AA$/){ $fAA = 1;}
-
+    
     print "$iAA\t";
     print "$iTT\t";
     print "$iGG\t";
@@ -126,7 +126,7 @@ while(<A>){
    
             
     
-    ###Melting ----------------------------
+    ###Melting Inacio ----------------------------
     $TmI = qx( ./bin/OligoCalc.py $oNat_Sense ); chomp($TmI);
     $hI  = qx( ./bin/HairpinCalc.py        $oNat_Sense 5 4 ); chomp($hI);
     $sI  = qx( ./bin/SelfAnnealingSites.py $oNat_Sense 5 4 ); chomp($sI);
@@ -184,9 +184,10 @@ while(<A>){
     print "si_shRNA_selector\t";
     &si_shRNA_selector($aux[1]);
 
-    ###End                         --------------------------------------------
+    ###Fim                         --------------------------------------------
     print "\n";
 }
+
 
 sub si_shRNA_selector {
 
@@ -195,8 +196,7 @@ sub si_shRNA_selector {
     
     my $natural = qx(tail -n 1 $set..2); chomp($natural);
     qx(rm $set..*);
-    
-    
+        
     my $aux  =  substr($_[0],0,$o_len)."TT";
     qx(printf ">teste\n$aux\n" > $set..1);
     qx(./bin/si_shRNA_selector -len $set2 -i $set..1 -o $set..2 );
@@ -226,7 +226,7 @@ sub si_shRNA_selector {
 
     my @aux = split(/\s+/, $ant);
     print "\tAntiSense:\t$eff_A\t$aux[3]\t$aux[4]\t";
-
+    
 }
 
 sub delta_Composition21 {
@@ -259,22 +259,34 @@ sub alin_seq2 {
     $genome ="H1N1";             &genomic_match2($_[0],$genome,$_[1],"h1n1");
     print "\t";
     #------------------------------------------------
-    $genome ="Brazil";           &covid_match2($_[0],$genome,$_[1],"Brazil");
-    $genome ="Wuhan";            &covid_match2($_[0],$genome,$_[1],"Wuhan");
-    $genome ="China";            &covid_match2($_[0],$genome,$_[1],"China");
-    $genome ="England";          &covid_match2($_[0],$genome,$_[1],"England");
-    $genome ="Germany";          &covid_match2($_[0],$genome,$_[1],"Germany");
-    $genome ="Italy";            &covid_match2($_[0],$genome,$_[1],"Italy");
-    $genome ="Russia";           &covid_match2($_[0],$genome,$_[1],"Russia");
-    $genome ="Spain";            &covid_match2($_[0],$genome,$_[1],"Spain");
-    $genome ="USA";              &covid_match2($_[0],$genome,$_[1],"USA");
+    #$genome ="Brazil";           &covid_match2($_[0],$genome,$_[1],"Brazil");
+    #$genome ="Wuhan";            &covid_match2($_[0],$genome,$_[1],"Wuhan");
+    #$genome ="China";            &covid_match2($_[0],$genome,$_[1],"China");
+    #$genome ="England";          &covid_match2($_[0],$genome,$_[1],"England");
+    #$genome ="Germany";          &covid_match2($_[0],$genome,$_[1],"Germany");
+    #$genome ="Italy";            &covid_match2($_[0],$genome,$_[1],"Italy");
+    #$genome ="Russia";           &covid_match2($_[0],$genome,$_[1],"Russia");
+    #$genome ="Spain";            &covid_match2($_[0],$genome,$_[1],"Spain");
+    #$genome ="USA";              &covid_match2($_[0],$genome,$_[1],"USA");
+
+    my @tmp = qx(ls STS/ | grep "^$_[1]" | grep ".$set2.sts"); chomp(@tmp);
+    for(my $i=0; $i <= $#tmp; $i++){
+	my @a = split(/\./, $tmp[$i]);
+	if (($a[1] !~ /_cds/) and ($a[1] !~ /genome/) and ($a[1] !~ /MERS/) and ($a[1] !~ /SARS2010/) and ($a[1] !~ /H1N1/)) {
+	    #print "$a[1]\t"; #pais
+	    $genome ="$a[1]";
+	    &covid_match2($_[0],$genome,$_[1]);
+	}
+    }
+  
 }
 
+#%GH =();
 sub G_hit {
     my @tmp = qx(ls STS/ | grep ".$set2.sts"); chomp(@tmp);
 
     for(my $i=0; $i <= $#tmp; $i++){
-
+	#print "$tmp[$i]\n";
 	my @a = split(/\./, $tmp[$i]);
 	open (K, "STS/$tmp[$i]");
 	while (<K>) {
@@ -289,13 +301,23 @@ sub G_hit {
 
 sub genomic_match2 {
     ($nm,) = split(/\t/, $GH{"$_[2] $_[1] $_[0]"} );
+    #$nm  = qx(grep -P "^$_[0]\\t"  ./STS/$_[2].$_[1].$o_len.sts 2> /dev/null | cut -f 2 );
+    #print "grep -P \"^$_[0]\\t\"  ./STS/$_[2].$_[1].$o_len.sts\n";
+    #chomp($nm);    
     if ($nm eq "" ) {$nm = "-1";}
+    #print "$_[3]= $nm\t";
     print "$nm\t";
 }
 
 sub covid_match2 {
-    ($l,$nm) = split(/\t/, $GH{"$_[2] $_[1] $_[0]"} );  
+
+    #print "\n$GH{\"$_[2] $_[1] $_[0]\"}== GH{\"$_[2] $_[1] $_[0]\"}\n\n";
+    ($l,$nm) = split(/\t/, $GH{"$_[2] $_[1] $_[0]"} );
+    #$nm = qx(grep -P "^$_[0]\\t"  ./STS/$_[2].$_[1].$o_len.sts 2> /dev/null | cut -f 3 );
+    #print "grep -P \"^$_[0]\\t\"  ./STS/$_[2].$_[1].$o_len.sts\n";
+    #chomp($nm);    
     if ($nm eq "" ) {$nm = "0";}
+    #print "$_[3]= $nm\t";
     print "$nm\t";
 }
 
@@ -318,8 +340,10 @@ sub olig_composition {
     print "$au\t";
 
     my $UUUU = scalar($_[0] =~ m/(UUUU)/g); if ( $UUUU > 0 ) {$UUUU = 1 } else {$UUUU = 0};
+    #my $TTTT = scalar($_[0] =~ m/(TTTT)/g); if ( $TTTT > 0 ) {$TTTT = 1 } else {$TTTT = 0};
     my $GCCA = scalar($_[0] =~ m/(GCCA)/g); if ( $GCCA > 0 ) {$GCCA = 1 } else {$GCCA = 0};
 
+    #print "TTTT= $TTTT\t";
     print "$UUUU\t";
     print "$GCCA\t";
 
@@ -337,6 +361,7 @@ sub penta {
     my $seq = $_[0];
     my $qtd = 0;
 
+    #print "$seq------\n";
     for($i=0;$i<= length($seq)-5 ;$i++){
 	my $sub_seq=substr($seq,$i,5);
 	my $A = $sub_seq =~ y/A/A/;
@@ -344,9 +369,11 @@ sub penta {
 
 	my $AU = ($A+$T)/5;
 	if ($AU >= 0.8 ){
+	    #print "$sub_seq\t$AU\n";
 	    $qtd++;
 	}
     }
+    #print "$qtd";
     return $qtd ;
 }
 
@@ -366,15 +393,18 @@ sub mAnnt {
 
 
 sub annot {
+    #print ">>>>> $dep0\n\n\n";
     open(B, $dep0);
     while (<B>){
 	chomp;
 	my @aux = split(/\t/,$_);
+	#print "($aux[1])($aux[2])($aux[3])\n";
 
 	for(my $i=$aux[1]; $i<= $aux[2]; $i++){
 	    if ($ANN{$i} !~ /$aux[3],/ ) {
 		$ANN{$i} .= "$aux[3],";
 	    }
+	    #print "$i = $ANN{$i}\n";
 	}      
     }
     close(B);
@@ -391,3 +421,4 @@ sub Comp {
     $seq =~ tr/ATGCatgc/TACGtacg/;
     return $seq;
 }
+
