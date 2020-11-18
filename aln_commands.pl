@@ -8,7 +8,7 @@ open(AS,">ANT.$ARGV[1]");
 while(<A>){
     chomp;
 
-    @aux = split(/\t/,$ _);
+    @aux = split(/\t/,$_);
 
     $t_len = length($aux[1]);
     $o_len = $t_len-2;
