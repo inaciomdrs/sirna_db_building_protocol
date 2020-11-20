@@ -39,6 +39,13 @@ close(A);
 
 sub alin_seq {
 
+    # If you do not wish to perform alignment steps of sequences
+    # against human genome, human coding transcriptome, human
+    # non-coding transcriptome, MERS, SARS, and H1N1 genomes,
+    # you can download the results files at 
+    # https://osf.io/a3x8m/, and delete or comment lines
+    # 54, 55, 62, 63, 70, 71, 78, 79, 86, 87, 94 and 95
+
     # Replace path/to/hg_genome/hg19/Sequence/BowtieIndex/genome
     # with the path to fasta file containing the sequence of
     # Human (GRCh37) genome.
