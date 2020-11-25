@@ -39,43 +39,71 @@ close(A);
 
 sub alin_seq {
 
+    # If you do not wish to perform alignment steps of sequences
+    # against human genome, human coding transcriptome, human
+    # non-coding transcriptome, MERS, SARS, and H1N1 genomes,
+    # you can download the results files at 
+    # https://osf.io/a3x8m/, and delete or comment lines
+    # 54, 55, 62, 63, 70, 71, 78, 79, 86, 87, 94 and 95
+
     # Replace path/to/hg_genome/hg19/Sequence/BowtieIndex/genome
     # with the path to fasta file containing the sequence of
-    # Human (GRCh37) genome
+    # Human (GRCh37) genome.
+    # IMPORTANT NOTE: do not alter the name "genome", otherwise
+    # subsequent programs won't be able to find it.
     $genome ="path/to/hg_genome/hg19/Sequence/BowtieIndex/genome";
     &genomic_match($_[0],$genome,150);
     
     # Replace path/to/hs_cDNA/GRCh38_cds
     # with the path to fasta file containing the sequence of
-    # Human (GRCh38) coding transcriptome
+    # Human (GRCh38) coding transcriptome.
+    # IMPORTANT NOTE: do not alter the name "GRCh38_cds", otherwise
+    # subsequent programs won't be able to find it.
     $genome ="path/to/hs_cDNA/GRCh38_cds";
     &genomic_match($_[0],$genome,220);
     
     # Replace path/to/hs_cDNA/GRCh38_cds_ncrna
     # with the path to fasta file containing the sequence of
-    # Human (GRCh38) non-coding transcriptome
+    # Human (GRCh38) non-coding transcriptome.
+    # IMPORTANT NOTE: do not alter the name "GRCh38_cds_ncrna", otherwise
+    # subsequent programs won't be able to find it.
     $genome ="path/to/hs_cDNA/GRCh38_cds_ncrna";
     &genomic_match($_[0],$genome,220);
     
     # Replace path/to/genomes_v_set/MERS
     # with the path to fasta file containing the sequence of
-    # MERS genome
+    # MERS genome.
+    # IMPORTANT NOTE: do not alter the name "MERS", otherwise
+    # subsequent programs won't be able to find it.
     $genome ="path/to/genomes_v_set/MERS";
     &genomic_match($_[0],$genome,220);
     
     # Replace path/to/genomes_v_set/SARS2010
     # with the path to fasta file containing the sequence of
-    # SARS genome
+    # SARS genome.
+    # IMPORTANT NOTE: do not alter the name "SARS2010", otherwise
+    # subsequent programs won't be able to find it.
     $genome ="path/to/genomes_v_set/SARS2010";
     &genomic_match($_[0],$genome,220);
     
     # Replace path/to/genomes_v_set/H1N1
     # with the path to fasta file containing the sequence of
-    # H1N1 genome
+    # H1N1 genome.
+    # IMPORTANT NOTE: do not alter the name "H1N1", otherwise
+    # subsequent programs won't be able to find it.
     $genome ="path/to/genomes_v_set/H1N1";
     &genomic_match($_[0],$genome,220);
     
-    ##########
+    ##########################################################
+
+    # Here you can use any country name, so as to add or remove 
+    # countries. Add or remove as many countries as you wish or
+    # may be necessary. 
+    # 
+    # IMPORTANT NOTE: keep the pattern 
+    # `path/to/gisaid/CountryName`, where "CountryName" may not
+    # have spaces or special characters. 
+
     # Replace path/to/gisaid/Brazil
     # with the path to fasta file containing the sequence of
     # Brazil SARS-CoV-2 strains genomes at GISAID 
